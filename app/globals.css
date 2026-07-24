@@ -1,0 +1,34 @@
+/* ===== Global mobile safeguards ===== */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+img, svg, video {
+  max-width: 100%;
+}
+
+/* ===== Responsive overrides ===== */
+/* Tablet and below */
+@media (max-width: 900px) {
+  .hero-row { grid-template-columns: 1fr !important; }
+  .location-grid { grid-template-columns: 1fr !important; }
+}
+
+/* Phones: collapse the desktop navbar to logo + cart */
+@media (max-width: 768px) {
+  .nav-links { display: none !important; }
+  .nav-search { display: none !important; }
+  /* show the hamburger, compact the cart, tighten spacing */
+  .nav-hamburger { display: flex !important; }
+  .cart-label { display: none !important; }
+  nav > div { gap: 12px !important; }
+  .hero-row { text-align: center; }
+  .hero-row .hero-cta { justify-content: center; }
+  /* ease the big hero headline on small screens */
+  .hero-row h1 { font-size: 34px !important; line-height: 1.1 !important; }
+}
+
+@media (max-width: 400px) {
+  .hero-row h1 { font-size: 30px !important; }
+}
