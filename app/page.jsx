@@ -2625,6 +2625,38 @@ function HomePage({ onView, onAddToCart, searchQuery }) {
       {/* BPT Book Catalogue */}
       <BooksSection />
 
+      {/* Student reviews */}
+      <div style={{ background: C.bg, padding: "72px 5%" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase", color: C.primary, marginBottom: 12 }}>Student Reviews</p>
+          <h2 style={{ fontWeight: 800, fontSize: "clamp(28px,4vw,46px)", color: C.text, letterSpacing: "-0.5px", marginBottom: 40 }}>Rated 4.9 by BPT students.</h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 20 }}>
+            {[
+              { q: "Ordered the MVP kit before my first assessment posting. Everything I needed was in one case — no running around Potheri looking for a goniometer.", n: "Aparna R.", y: "1st Year BPT · SRM", r: 5, c: "#0057A8" },
+              { q: "The BPL stethoscope is the real deal, not a cheap copy. Delivered to my hostel in two days.", n: "Karthik V.", y: "2nd Year BPT · SRM", r: 5, c: "#16A34A" },
+              { q: "Free name and register-number printing meant my kit never got swapped in the lab. Small thing, huge relief.", n: "Meghna S.", y: "1st Year BPT · SRM", r: 5, c: "#6B21A8" },
+              { q: "Bought the goniometer set and CNS kit. Quality is consistent and pricing beats the local shops.", n: "Rahul T.", y: "3rd Year BPT · SRM", r: 4, c: "#B7791F" },
+              { q: "Genuinely student pricing. The savings on the kit versus buying each item added up to real money.", n: "Divya P.", y: "1st Year BPT · SRM", r: 5, c: "#0057A8" },
+              { q: "WhatsApp ordering is so easy — messaged them, confirmed, and paid on delivery.", n: "Sana M.", y: "2nd Year BPT · SRM", r: 5, c: "#0F766E" },
+            ].map((t, i) => (
+              <div key={i} style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 16, padding: 24, boxShadow: C.shadow, display: "flex", flexDirection: "column" }}>
+                <div style={{ fontSize: 15, letterSpacing: 2, marginBottom: 14 }}>
+                  <span style={{ color: "#F59E0B" }}>{"★".repeat(t.r)}</span><span style={{ color: C.border }}>{"★".repeat(5 - t.r)}</span>
+                </div>
+                <p style={{ fontSize: 15, lineHeight: 1.7, color: C.textSub, marginBottom: 22, flex: 1 }}>&ldquo;{t.q}&rdquo;</p>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <div style={{ width: 40, height: 40, borderRadius: "50%", background: `${t.c}1A`, color: t.c, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 15, flexShrink: 0 }}>{t.n[0]}</div>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: 14, color: C.text }}>{t.n}</div>
+                    <div style={{ fontSize: 12, color: C.muted }}>{t.y}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* How it works */}
       <div style={{ background: C.bg, padding: "64px 5%" }}>
         <div style={{ maxWidth: 1000, margin: "0 auto", textAlign: "center" }}>
