@@ -1757,7 +1757,6 @@ function HeroSection({ onShop }) {
           "✓ Genuine BPL Products",
           "✓ Fast Campus Delivery",
           "✓ Student Pricing",
-          "✓ GST Invoice Available",
         ].map((item) => (
           <div key={item}>
             {item}
@@ -2476,7 +2475,7 @@ function HomePage({ onView, onAddToCart, searchQuery }) {
       {/* Trust strip */}
       <div style={{ background: C.white, borderBottom: `1px solid ${C.border}` }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", padding: "22px 5%", display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "18px 44px" }}>
-          {[["4000+", "students served"], ["⭐ 4.9", "average rating"], ["Genuine BPL", "authentic products"], ["GST invoice", "on every order"]].map(([a, b]) => (
+          {[["4000+", "students served"], ["⭐ 4.9", "average rating"], ["Genuine BPL", "authentic products"]].map(([a, b]) => (
             <div key={a} style={{ display: "flex", flexDirection: "column", alignItems: "center", minWidth: 110 }}>
               <span style={{ fontWeight: 800, fontSize: 20, color: C.text }}>{a}</span>
               <span style={{ fontSize: 12, color: C.muted, textTransform: "uppercase", letterSpacing: 1 }}>{b}</span>
