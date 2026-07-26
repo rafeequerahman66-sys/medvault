@@ -2666,7 +2666,7 @@ function HomePage({ onView, onAddToCart, searchQuery }) {
             {[
               ["1", "Pick your kit", "Choose the kit or instruments you need for your year."],
               ["2", "We personalize it", "Free name + RA-number printing on your first 50 orders."],
-              ["3", "Delivered in 48h", "Straight to your SRM hostel — cash, UPI, or WhatsApp."],
+              ["3", "Delivered in 1 Hour", "Fast delivery within 1 hour to SRM University, all SRM hostels, and anywhere near SRM."],
             ].map(([n, t, d]) => (
               <div key={n} style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 16, padding: "28px 22px", boxShadow: C.shadow }}>
                 <div style={{ width: 44, height: 44, borderRadius: "50%", background: C.primary, color: C.white, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 18, margin: "0 auto 16px" }}>{n}</div>
