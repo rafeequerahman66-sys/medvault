@@ -655,14 +655,17 @@ const NAV_ITEMS = [
   {
     title: "Assessment Kit",
     icon: <Package size={16} />,
+    target: "shop",
   },
   {
     title: "Products",
     icon: <Search size={16} />,
+    target: "shop",
   },
   {
     title: "About",
     icon: <Info size={16} />,
+    target: "about",
   },
 ];
 
@@ -670,16 +673,11 @@ function Navbar({
   cartCount,
   onCart,
   onHome,
+  onNav,
   searchQuery,
   onSearchChange,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const goShop = () => {
-    if (typeof document !== "undefined") {
-      document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
-    }
-    setMenuOpen(false);
-  };
   return (
     <>
       {/* ================================================= */}
@@ -835,6 +833,7 @@ function Navbar({
             {NAV_ITEMS.map((item) => (
               <button
                 key={item.title}
+                onClick={() => onNav(item.target)}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -1085,7 +1084,7 @@ function Navbar({
             {NAV_ITEMS.map((item) => (
               <button
                 key={item.title}
-                onClick={goShop}
+                onClick={() => { onNav(item.target); setMenuOpen(false); }}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -2678,7 +2677,7 @@ function HomePage({ onView, onAddToCart, searchQuery }) {
       </div>
 
       {/* Find Us */}
-      <div style={{ background: C.white, borderTop: `1px solid ${C.border}`, padding: "64px 5%" }}>
+      <div id="about" style={{ background: C.white, borderTop: `1px solid ${C.border}`, padding: "64px 5%" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <div style={{ marginBottom: 36 }}>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#EBF5FF", borderRadius: 100, padding: "4px 14px", marginBottom: 12 }}>
@@ -3267,6 +3266,22 @@ export default function App() {
   const goDetail = (p) => { setSelectedProduct(p); setPage("detail"); window.scrollTo({ top: 0 }); };
   const goCart = () => { setPage("cart"); window.scrollTo({ top: 0 }); };
   const goCheckout = () => { setPage("checkout"); window.scrollTo({ top: 0 }); };
+  const goSection = (id) => {
+    const scroll = () => {
+      const el = typeof document !== "undefined" ? document.getElementById(id) : null;
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+      else window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+    if (page !== "home") {
+      setPage("home");
+      setSelectedProduct(null);
+      setNavSearch("");
+      // let HomePage mount before scrolling to its section
+      setTimeout(scroll, 80);
+    } else {
+      scroll();
+    }
+  };
 
   return (
     <>
@@ -3277,6 +3292,7 @@ export default function App() {
             cartCount={cartCount}
             onCart={goCart}
             onHome={goHome}
+            onNav={goSection}
             searchQuery={navSearch}
             onSearchChange={val => { setNavSearch(val); if (page !== "home") goHome(); }}
           />
