@@ -2771,7 +2771,7 @@ function HomePage({ onView, onAddToCart, searchQuery }) {
       <div style={{ background: C.primary, padding: "56px 5%", textAlign: "center" }}>
         <div style={{ maxWidth: 720, margin: "0 auto" }}>
           <h2 style={{ fontWeight: 800, fontSize: "clamp(24px,4vw,38px)", color: C.white, marginBottom: 12, lineHeight: 1.15 }}>Get exam-ready. Order your kit today.</h2>
-          <p style={{ color: "rgba(255,255,255,.88)", fontSize: 16, marginBottom: 26 }}>Free name + RA-number printing on your first 50 orders · 48h campus delivery.</p>
+          <p style={{ color: "rgba(255,255,255,.88)", fontSize: 16, marginBottom: 26 }}>Name + RA-number printing included • 1-hour delivery across SRM University, all SRM hostels, and nearby areas.</p>
           <button onClick={scrollToShop} style={{ background: C.white, color: C.primary, border: "none", borderRadius: 14, padding: "16px 34px", fontWeight: 800, fontSize: 15, cursor: "pointer", boxShadow: "0 12px 30px rgba(0,0,0,.18)" }}>
             Shop the MVP Kit — ₹1,799
           </button>
