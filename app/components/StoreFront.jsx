@@ -9,7 +9,7 @@
    ========================================================================== */
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { BOOK_ITEMS } from "../page"; // real BPT textbook catalogue (with real cover images)
+import { BOOK_ITEMS } from "../lib/catalog";
 
 /* ---------------------------------------------------------------- tokens -- */
 const T = {
@@ -681,7 +681,7 @@ export default function MedVaultRedesign() {
               <div style={{ background: T.green, borderRadius: 20, padding: 48, display: "flex", flexWrap: "wrap", gap: 32, alignItems: "center", justifyContent: "space-between" }}>
                 <div style={{ flex: "1 1 340px", minWidth: 280 }}>
                   <h2 style={{ ...h2, fontSize: 30, color: "#fff" }}>Get ₹100 off your first order</h2>
-                  <p style={{ fontFamily: MONO_FACE, fontSize: 15, color: "#DBF3E4", margin: "10px 0 0" }}>Drop your number — we'll send the code on WhatsApp with the delivery slots for your block.</p>
+                  <p style={{ fontFamily: MONO_FACE, fontSize: 15, color: "#DBF3E4", margin: "10px 0 0" }}>Drop your number — we&rsquo;ll send the code on WhatsApp with the delivery slots for your block.</p>
                 </div>
                 <form onSubmit={(e) => { e.preventDefault(); setSubscribed(true); flash("We'll WhatsApp your code shortly"); }} style={{ flex: "1 1 320px", minWidth: 280, display: "flex", gap: 10, flexWrap: "wrap" }}>
                   <input placeholder="WhatsApp number" style={{ flex: "1 1 180px", height: 52, border: "none", borderRadius: 12, padding: "0 18px", fontSize: 15, outline: "none", color: T.ink }} />
@@ -827,8 +827,7 @@ export default function MedVaultRedesign() {
                   <button type="button" className="mv-btn" onClick={() => add(product, qty)} style={{ ...btn.primary, flex: "1 1 180px", height: 48, borderRadius: 11, boxShadow: "0 8px 18px rgba(22,163,74,.22)" }}>Add {qty} to cart · {fmt(product.price * qty)}</button>
                 </div>
                 <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                  {/* ← wire to the existing WhatsApp order composer */}
-                  <button type="button" className="mv-btn" onClick={() => { add(product, qty); go("checkout"); }} style={{ ...btn.dark, flex: "1 1 160px", height: 48, borderRadius: 11, fontSize: 14.5 }}>Order on WhatsApp</button>
+                  <button type="button" className="mv-btn" onClick={() => { const msg = `Hello MedVault! I'd like to order 🛒\n\n• ${product.name} × ${qty} — ₹${(product.price * qty).toLocaleString("en-IN")}\n\n*Total: ₹${(product.price * qty).toLocaleString("en-IN")}*\n\nDeliver to SRM.`; window.open(`https://wa.me/918248613274?text=${encodeURIComponent(msg)}`, "_blank"); }} style={{ ...btn.dark, flex: "1 1 160px", height: 48, borderRadius: 11, fontSize: 14.5 }}>Order on WhatsApp</button>
                   <button type="button" className="mv-btn" onClick={() => toggleWish(product)} style={{ flex: "0 0 120px", height: 48, border: `1px solid ${wish.includes(product.id) ? T.green : T.lineStrong}`, borderRadius: 11, background: wish.includes(product.id) ? T.greenTint : "#fff", color: wish.includes(product.id) ? T.greenDark : T.ink, fontSize: 14.5, fontWeight: 700 }}>{wish.includes(product.id) ? "♥ Saved" : "♡ Save"}</button>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 8, paddingTop: 4, fontFamily: MONO_FACE, fontSize: 13, color: T.muted }}>
@@ -925,7 +924,7 @@ export default function MedVaultRedesign() {
                 ))}
                 <div style={{ padding: "16px 18px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
                   <span className="mv-navlink" onClick={() => goCat("All")} style={{ fontSize: 14, fontWeight: 700 }}>← Continue shopping</span>
-                  <span style={{ fontFamily: MONO_FACE, fontSize: 13, color: T.greenDark, fontWeight: 600 }}>You're saving {fmt(savings)}</span>
+                  <span style={{ fontFamily: MONO_FACE, fontSize: 13, color: T.greenDark, fontWeight: 600 }}>You&rsquo;re saving {fmt(savings)}</span>
                 </div>
               </div>
               <Summary />
@@ -944,16 +943,31 @@ export default function MedVaultRedesign() {
       {page === "checkout" && (
         <main style={{ ...container, padding: "44px 24px 90px" }}>
           <h1 style={{ fontSize: 34, fontWeight: 800, letterSpacing: "-.03em", margin: "0 0 6px" }}>Checkout</h1>
-          <p style={{ fontFamily: MONO_FACE, fontSize: 14, color: T.muted2, margin: "0 0 32px" }}>Confirm your details — we'll send the order to WhatsApp and deliver to your block.</p>
+          <p style={{ fontFamily: MONO_FACE, fontSize: 14, color: T.muted2, margin: "0 0 32px" }}>Confirm your details — we&rsquo;ll send the order to WhatsApp and deliver to your block.</p>
           <div style={{ display: "flex", gap: 32, alignItems: "flex-start", flexWrap: "wrap" }}>
-            {/* ← replace onSubmit with the existing order handler */}
-            <form onSubmit={(e) => { e.preventDefault(); if (placing) return; setPlacing(true); setTimeout(() => { setPlacing(false); setCart([]); go("success"); }, 1100); }} style={{ flex: "1 1 560px", minWidth: 300, display: "flex", flexDirection: "column", gap: 28 }}>
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              if (placing) return;
+              const f = new FormData(e.currentTarget);
+              const name = (f.get("name") || "").toString().trim();
+              const phone = (f.get("phone") || "").toString().trim();
+              if (!name || !phone) { flash("Add your name and WhatsApp number"); return; }
+              if (!cartItems.length) { flash("Your cart is empty"); return; }
+              setPlacing(true);
+              const address = [f.get("block"), f.get("room")].filter(Boolean).join(", ") + " · SRM";
+              const orderData = { orderId: "MV" + Date.now(), customerName: name, email: "", phone, address, items: cartItems.map((i) => ({ name: i.name, price: i.price, quantity: i.qty })), total: subtotal, slot, payment: pay };
+              try { await fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(orderData) }); } catch {}
+              const lines = cartItems.map((i) => `• ${i.name} × ${i.qty} — ₹${(i.price * i.qty).toLocaleString("en-IN")}`).join("\n");
+              const waMsg = `Hello MedVault! I want to place an order 🛒\n\n${lines}\n\n*Total: ₹${subtotal.toLocaleString("en-IN")}*\n\n*Customer:*\nName: ${name}\nWhatsApp: ${phone}\nDeliver to: ${address}\nPayment: ${pay.toUpperCase()}`;
+              window.open(`https://wa.me/918248613274?text=${encodeURIComponent(waMsg)}`, "_blank");
+              setPlacing(false); setCart([]); go("success");
+            }} style={{ flex: "1 1 560px", minWidth: 300, display: "flex", flexDirection: "column", gap: 28 }}>
               <div style={{ border: `1px solid ${T.line}`, borderRadius: 16, padding: 24 }}>
                 <p style={{ fontSize: 16, fontWeight: 800, margin: "0 0 18px" }}>1 · Your details</p>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 14 }}>
-                  {[["Full name", "Aparna R."], ["RA number", "RA24110xxxxxxx"], ["WhatsApp number", "+91 "], ["Year & course", "1st year BPT"]].map(([l, ph]) => (
+                  {[["Full name", "Aparna R.", "name"], ["RA number", "RA24110xxxxxxx", "ra"], ["WhatsApp number", "+91 ", "phone"], ["Year & course", "1st year BPT", "year"]].map(([l, ph, nm]) => (
                     <label key={l} style={{ display: "flex", flexDirection: "column", gap: 7, fontFamily: MONO_FACE, fontSize: 12.5, fontWeight: 600, color: T.muted }}>{l}
-                      <input className="mv-input" placeholder={ph} style={{ height: 46, border: `1px solid ${T.lineStrong}`, borderRadius: 10, padding: "0 14px", fontSize: 14.5, color: T.ink }} />
+                      <input name={nm} className="mv-input" placeholder={ph} style={{ height: 46, border: `1px solid ${T.lineStrong}`, borderRadius: 10, padding: "0 14px", fontSize: 14.5, color: T.ink }} />
                     </label>
                   ))}
                 </div>
@@ -962,9 +976,9 @@ export default function MedVaultRedesign() {
               <div style={{ border: `1px solid ${T.line}`, borderRadius: 16, padding: 24 }}>
                 <p style={{ fontSize: 16, fontWeight: 800, margin: "0 0 18px" }}>2 · Where should we drop it?</p>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 14 }}>
-                  {[["Hostel / block", "Paari Block A"], ["Room number", "412"]].map(([l, ph]) => (
+                  {[["Hostel / block", "Paari Block A", "block"], ["Room number", "412", "room"]].map(([l, ph, nm]) => (
                     <label key={l} style={{ display: "flex", flexDirection: "column", gap: 7, fontFamily: MONO_FACE, fontSize: 12.5, fontWeight: 600, color: T.muted }}>{l}
-                      <input className="mv-input" placeholder={ph} style={{ height: 46, border: `1px solid ${T.lineStrong}`, borderRadius: 10, padding: "0 14px", fontSize: 14.5, color: T.ink }} />
+                      <input name={nm} className="mv-input" placeholder={ph} style={{ height: 46, border: `1px solid ${T.lineStrong}`, borderRadius: 10, padding: "0 14px", fontSize: 14.5, color: T.ink }} />
                     </label>
                   ))}
                 </div>
@@ -1004,7 +1018,7 @@ export default function MedVaultRedesign() {
         <main style={{ maxWidth: 640, margin: "0 auto", padding: "100px 24px 120px", textAlign: "center", animation: "mvIn .4s ease both" }}>
           <div style={{ width: 72, height: 72, borderRadius: "50%", background: T.greenTint, border: `1px solid ${T.greenBorder}`, color: T.green, fontSize: 30, display: "grid", placeItems: "center", margin: "0 auto 26px" }}>✓</div>
           <h1 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-.03em", margin: 0 }}>Order sent to WhatsApp</h1>
-          <p style={{ fontFamily: MONO_FACE, fontSize: 16, lineHeight: 1.65, color: T.muted, margin: "14px 0 30px" }}>We've got it. You'll get a confirmation on WhatsApp in a minute, and the delivery in about 10 after that.</p>
+          <p style={{ fontFamily: MONO_FACE, fontSize: 16, lineHeight: 1.65, color: T.muted, margin: "14px 0 30px" }}>We&rsquo;ve got it. You&rsquo;ll get a confirmation on WhatsApp in a minute, and the delivery in about 10 after that.</p>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
             <button type="button" className="mv-btn" onClick={() => go("track")} style={{ ...btn.primary, height: 48, boxShadow: "none" }}>Track this order</button>
             <button type="button" className="mv-btn" onClick={() => go("home")} style={{ ...btn.ghost, height: 48 }}>Back to home</button>
