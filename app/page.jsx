@@ -11,7 +11,7 @@ import {
   X,
 } from "lucide-react";
 
-const C = {
+export const C = {
   bg: "#F0F4F8",
   white: "#FFFFFF",
   header: "#0A1628",
@@ -81,8 +81,8 @@ const globalStyles = `
   }
 `;
 
-const fmt = (n) => `₹${n.toLocaleString("en-IN")}`;
-const disc = (p, o) => Math.round(((o - p) / o) * 100);
+export const fmt = (n) => `₹${n.toLocaleString("en-IN")}`;
+export const disc = (p, o) => Math.round(((o - p) / o) * 100);
 const isUrl = (s) => typeof s === "string" && (s.startsWith("/") || s.startsWith("http"));
 
 // ── Image Gallery ─────────────────────────────────────────────
@@ -129,7 +129,7 @@ const PH = (prompt, seed, model = "flux-realism") =>
 const R = (p, s) => PH(p, s, "flux-realism");
 const F = (p, s) => PH(p, s, "flux");
 
-const IMG = {
+export const IMG = {
   kit1: [
     "/kit.jpg",
   ],
@@ -263,7 +263,7 @@ const IMG = {
 };
 
 // ── Kits ──────────────────────────────────────────────────────
-const KITS = [
+export const KITS = [
   {
     id: "kit-1", type: "kit",
     name: "MedVault MVP Physiotherapy Assessment Kit",
@@ -329,7 +329,7 @@ const KITS = [
 ];
 
 // ── Individual Items ───────────────────────────────────────────
-const ITEMS = [
+export const ITEMS = [
   { id:"i-1",  type:"item", name:"BPL Dual-Sided Chestpiece Stethoscope", tagline:"Acoustic medical instrument", price:950, originalPrice:1299, badge:"MONITORING", images:IMG.stethoscope, desc:"A dual-head acoustic stethoscope with a diaphragm for high-frequency sounds and a bell for low-frequency sounds. Suitable for cardiac, pulmonary, and abdominal auscultation.", stock:55 },
   { id:"i-2",  type:"item", name:"Universal Goniometer", tagline:"Large joint ROM measurement", price:293, originalPrice:450, badge:"PHYSIO TOOL", images:IMG.goniometer, desc:"A large transparent goniometer for measuring joint range of motion (ROM) in major joints like the hip, knee, and shoulder.", stock:80 },
   { id:"i-3",  type:"item", name:"Half-Range Goniometer", tagline:"Medium joint ROM measurement", price:267, originalPrice:300, badge:"PHYSIO TOOL", images:IMG.goniometer, desc:"A standard 180-degree half-circle goniometer with two adjustable arms, perfect for elbow and ankle measurements.", stock:80 },
@@ -421,7 +421,7 @@ const ACCESSORIES = [
 ];
 
 // ── Apparel ────────────────────────────────────────────────────
-const APPAREL = [
+export const APPAREL = [
   {
     id:"ap-1", type:"apparel",
     name:"MedVault Scrubs Set", tagline:"Top & bottom — clinical-grade",
@@ -452,7 +452,7 @@ const GB = (id) => `https://books.google.com/books/content?id=${id}&printsec=fro
 // AI fallback
 const BK = (title, seed) => R(`${title} medical textbook cover, professional academic book, white background, studio photography, no people`, seed);
 
-const BOOK_ITEMS = [
+export const BOOK_ITEMS = [
   // 1st Year
   { id:"b-1",  type:"book", year:"1st Year", subject:"Anatomy",
     name:"Anatomy & Physiology in Health and Illness", tagline:"Ross & Wilson · Elsevier",
